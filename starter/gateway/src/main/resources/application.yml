@@ -8,10 +8,6 @@ spring:
     gateway:
       server:
         webflux:
-          default-filters:
-            # Aplica a todas las rutas: comportamiento transversal de
-            # infraestructura, no lógica de negocio.
-            - AddResponseHeader=X-Gateway-Lab, DSY1107
           routes:
             # ETAPA INICIAL
             # Esta ruta ya funciona para que el grupo pueda comprobar
@@ -36,6 +32,9 @@ spring:
               filters:
                 - RewritePath=/api/v2/(?<segment>.*), /$\{segment}
                 - AddResponseHeader=X-API-Version, v2
+
+          # TODO ETAPA D:
+          # Agregar un header transversal X-Gateway-Lab.
 
           # TODO ETAPA E:
           # Configurar CORS para el cliente web que se ejecutará en puerto 5500.
