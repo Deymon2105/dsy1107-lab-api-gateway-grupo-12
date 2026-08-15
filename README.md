@@ -219,6 +219,8 @@ Registren en `docs/evidencias.md`:
 
 En este momento el cliente conoce directamente la dirección física del backend. ¿Qué problema podría producir eso si existieran muchos servicios o si el backend cambiara de ubicación?
 
+R:
+
 ---
 
 ## 8. Probar la ruta inicial del gateway
@@ -358,11 +360,11 @@ Completen:
 
 | Método | Recurso | Status | Significado |
 |---|---|---:|---|
-| GET | `/api/v1/posts` | | colección |
-| GET | `/api/v1/posts/1` | | recurso |
-| POST | `/api/v1/posts` | | creación |
-| PUT | `/api/v1/posts/1` | | actualización/reemplazo |
-| DELETE | `/api/v1/posts/1` | | eliminación |
+| GET | `/api/v1/posts` |200 OK| colección |
+| GET | `/api/v1/posts/1` |200 OK| recurso |
+| POST | `/api/v1/posts` |500 Internal Server Error| creación |
+| PUT | `/api/v1/posts/1` |200 OK| actualización/reemplazo |
+| DELETE | `/api/v1/posts/1` |200 OK| eliminación |
 
 ### Importante
 
