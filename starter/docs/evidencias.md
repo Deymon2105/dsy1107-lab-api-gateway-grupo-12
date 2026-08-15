@@ -93,8 +93,8 @@ Responder:
 ## 6. Header transversal
 
 - Header esperado: `X-Gateway-Lab: DSY1107`
-- Evidencia observada:
-- ¿Por qué este comportamiento puede considerarse transversal?:
+- Evidencia observada: presente en todas las respuestas del gateway. En `GET /api/v1/posts/1` y `GET /api/v2/posts/1` se obtuvo `HTTP/1.1 200 OK` con `X-Gateway-Lab: DSY1107` y el `X-API-Version` correspondiente (v1 y v2).
+- ¿Por qué este comportamiento puede considerarse transversal?: porque se define una sola vez en `spring.cloud.gateway.server.webflux.default-filters` y se aplica a **todas** las rutas sin repetir la configuración en cada una. Es comportamiento de infraestructura (identificación del gateway), no lógica de negocio del backend: cualquier ruta nueva hereda el header automáticamente.
 
 ---
 
@@ -138,14 +138,16 @@ Explicar qué elementos observados en el laboratorio permiten afirmar que la API
 
 | Responsabilidad | Cliente | Gateway | Backend | Justificación |
 |---|:---:|:---:|:---:|---|
-| routing | | | | |
-| lógica de negocio | | | | |
-| autenticación/autorización | | | | |
-| transformación de rutas | | | | |
-| persistencia | | | | |
-| rate limiting | | | | |
-| reglas de negocio | | | | |
-| observabilidad | | | | |
+| routing | | X | | El gateway decide a qué backend va cada petición según el predicate `Path`. |
+| lógica de negocio | | | X | El dominio y su cálculo viven en el backend (JSONPlaceholder). |
+| autenticación/autorización | | X | X | El gateway puede validar el token en el punto de entrada; el backend también debe validar para no confiar solo en el gateway. |
+| transformación de rutas | | X | | `RewritePath`/`StripPrefix` ocurren en el gateway antes de enrutar. |
+| persistencia | | | X | El almacenamiento de datos pertenece al backend. |
+| rate limiting | | X | X | Suele implementarse en el gateway (límite global de entrada); el backend puede reforzarlo según su capacidad. |
+| reglas de negocio | | | X | Validaciones propias del dominio, no de infraestructura. |
+| observabilidad | | X | X | El gateway registra el tráfico de entrada; el backend reporta métricas internas. |
+
+Autenticación, rate limiting y observabilidad son **capacidades transversales**: aunque el gateway las centralice, el backend debe mantener sus propios controles de seguridad y monitoreo.
 
 ---
 
