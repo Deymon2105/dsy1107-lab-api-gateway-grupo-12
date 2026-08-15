@@ -8,6 +8,11 @@ spring:
     gateway:
       server:
         webflux:
+
+          default-filters:
+            - AddResponseHeader=X-Gateway-Lab, DSY1107
+          
+          
           routes:
             # ETAPA INICIAL
             # Esta ruta ya funciona para que el grupo pueda comprobar
