@@ -8,6 +8,11 @@ spring:
     gateway:
       server:
         webflux:
+
+          default-filters:
+            - AddResponseHeader=X-Gateway-Lab, DSY1107
+          
+          
           routes:
             # ETAPA INICIAL
             # Esta ruta ya funciona para que el grupo pueda comprobar
@@ -20,9 +25,18 @@ spring:
                 # El cliente invoca /api/v1/posts/1, pero el backend público
                 # recibe /posts/1.
                 - RewritePath=/api/v1/(?<segment>.*), /$\{segment}
+                - AddResponseHeader=X-API-Version, v1
+
 
           # TODO ETAPA C:
           # Agregar una ruta posts-v2 y un header X-API-Version.
+            - id: posts-v2
+              uri: https://jsonplaceholder.typicode.com
+              predicates:
+                - Path=/api/v2/posts/**
+              filters:
+                - RewritePath=/api/v2/(?<segment>.*), /$\{segment}
+                - AddResponseHeader=X-API-Version, v2
 
           # TODO ETAPA D:
           # Agregar un header transversal X-Gateway-Lab.
